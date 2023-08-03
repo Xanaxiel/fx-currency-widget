@@ -1,5 +1,7 @@
 package com.cy.fxcurrencywidget.controller;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -8,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
 
 @RestController
 @RequestMapping("/currency")
@@ -18,6 +21,8 @@ public class ExchangeRatesAPIController {
 
     @Value("${app.exchangerates.apiKey}") String apiKey;
 
+
+    @Operation(summary = "Get symbols")
     @GetMapping("/symbols")
     public ResponseEntity<?> getSymbols() {
         ResponseEntity<String> response = restTemplate.getForEntity(UriComponentsBuilder
@@ -29,6 +34,7 @@ public class ExchangeRatesAPIController {
         return response;
     }
 
+    @Operation(summary = "Convert from one currency to another")
     @GetMapping("/convert")
     public ResponseEntity<?> convert(@RequestParam("from") String from,
                                      @RequestParam("to") String to,
@@ -53,6 +59,8 @@ public class ExchangeRatesAPIController {
         log.info("convert {} ",response.getBody());
         return response;
     }
+
+    @Operation(summary = "Get latest rate for currency")
     @GetMapping("/latest/{currency}")
     public ResponseEntity<?> getLatestRate(@PathVariable("currency") String currency) {
         ResponseEntity<String> response = restTemplate.getForEntity(UriComponentsBuilder
@@ -64,7 +72,4 @@ public class ExchangeRatesAPIController {
         log.info("getLatestRate {} ",response.getBody());
         return response;
     }
-
-
-
 }
